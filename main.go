@@ -129,7 +129,7 @@ func (m *EnvModel) ResetRows() {
 
 type EnvSettingDialog struct{
 	*walk.Dialog
-	ui dialogUI
+	ui envSettingDialogUI
 }
 
 func main(){

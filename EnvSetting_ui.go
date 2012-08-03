@@ -6,22 +6,22 @@ import (
 	"github.com/lxn/walk"
 )
 
-type dialogUI struct {
-	groupBox     *walk.GroupBox
-	tableView    *walk.TableView
-	frame        *walk.Composite
-	pushButton_5 *walk.PushButton
-	pushButton   *walk.PushButton
-	pushButton_2 *walk.PushButton
-	groupBox_2   *walk.GroupBox
-	tableView_2  *walk.TableView
-	frame_2      *walk.Composite
-	pushButton_6 *walk.PushButton
-	pushButton_3 *walk.PushButton
-	pushButton_4 *walk.PushButton
-	frame_3      *walk.Composite
-	pushButton_8 *walk.PushButton
-	pushButton_7 *walk.PushButton
+type envSettingDialogUI struct {
+	groupBox        *walk.GroupBox
+	usrEnvTableView *walk.TableView
+	frame           *walk.Composite
+	newUserEnvBtn   *walk.PushButton
+	delUsrEnvBtn    *walk.PushButton
+	editUsrEnvBtn   *walk.PushButton
+	groupBox_2      *walk.GroupBox
+	sysEnvTableView *walk.TableView
+	frame_2         *walk.Composite
+	newSysEnvBtn    *walk.PushButton
+	delSysEnvBtn    *walk.PushButton
+	editSysEnvBtn   *walk.PushButton
+	frame_3         *walk.Composite
+	okBtn           *walk.PushButton
+	cancelBtn       *walk.PushButton
 }
 
 func (w *EnvSettingDialog) init(owner walk.RootWidget) (err error) {
@@ -41,7 +41,7 @@ func (w *EnvSettingDialog) init(owner walk.RootWidget) (err error) {
 		font = nil
 	}
 
-	w.SetName("Dialog")
+	w.SetName("EnvSettingDialog")
 	if err := w.SetClientSize(walk.Size{481, 490}); err != nil {
 		return err
 	}
@@ -81,11 +81,11 @@ func (w *EnvSettingDialog) init(owner walk.RootWidget) (err error) {
 		return err
 	}
 
-	// tableView
-	if w.ui.tableView, err = walk.NewTableView(w.ui.groupBox); err != nil {
+	// usrEnvTableView
+	if w.ui.usrEnvTableView, err = walk.NewTableView(w.ui.groupBox); err != nil {
 		return err
 	}
-	w.ui.tableView.SetName("tableView")
+	w.ui.usrEnvTableView.SetName("usrEnvTableView")
 
 	// frame
 	if w.ui.frame, err = walk.NewComposite(w.ui.groupBox); err != nil {
@@ -108,30 +108,30 @@ func (w *EnvSettingDialog) init(owner walk.RootWidget) (err error) {
 		return err
 	}
 
-	// pushButton_5
-	if w.ui.pushButton_5, err = walk.NewPushButton(w.ui.frame); err != nil {
+	// newUserEnvBtn
+	if w.ui.newUserEnvBtn, err = walk.NewPushButton(w.ui.frame); err != nil {
 		return err
 	}
-	w.ui.pushButton_5.SetName("pushButton_5")
-	if err := w.ui.pushButton_5.SetText(`New`); err != nil {
-		return err
-	}
-
-	// pushButton
-	if w.ui.pushButton, err = walk.NewPushButton(w.ui.frame); err != nil {
-		return err
-	}
-	w.ui.pushButton.SetName("pushButton")
-	if err := w.ui.pushButton.SetText(`Delete`); err != nil {
+	w.ui.newUserEnvBtn.SetName("newUserEnvBtn")
+	if err := w.ui.newUserEnvBtn.SetText(`New`); err != nil {
 		return err
 	}
 
-	// pushButton_2
-	if w.ui.pushButton_2, err = walk.NewPushButton(w.ui.frame); err != nil {
+	// delUsrEnvBtn
+	if w.ui.delUsrEnvBtn, err = walk.NewPushButton(w.ui.frame); err != nil {
 		return err
 	}
-	w.ui.pushButton_2.SetName("pushButton_2")
-	if err := w.ui.pushButton_2.SetText(`Edit`); err != nil {
+	w.ui.delUsrEnvBtn.SetName("delUsrEnvBtn")
+	if err := w.ui.delUsrEnvBtn.SetText(`Delete`); err != nil {
+		return err
+	}
+
+	// editUsrEnvBtn
+	if w.ui.editUsrEnvBtn, err = walk.NewPushButton(w.ui.frame); err != nil {
+		return err
+	}
+	w.ui.editUsrEnvBtn.SetName("editUsrEnvBtn")
+	if err := w.ui.editUsrEnvBtn.SetText(`Edit`); err != nil {
 		return err
 	}
 
@@ -154,11 +154,11 @@ func (w *EnvSettingDialog) init(owner walk.RootWidget) (err error) {
 		return err
 	}
 
-	// tableView_2
-	if w.ui.tableView_2, err = walk.NewTableView(w.ui.groupBox_2); err != nil {
+	// sysEnvTableView
+	if w.ui.sysEnvTableView, err = walk.NewTableView(w.ui.groupBox_2); err != nil {
 		return err
 	}
-	w.ui.tableView_2.SetName("tableView_2")
+	w.ui.sysEnvTableView.SetName("sysEnvTableView")
 
 	// frame_2
 	if w.ui.frame_2, err = walk.NewComposite(w.ui.groupBox_2); err != nil {
@@ -181,30 +181,30 @@ func (w *EnvSettingDialog) init(owner walk.RootWidget) (err error) {
 		return err
 	}
 
-	// pushButton_6
-	if w.ui.pushButton_6, err = walk.NewPushButton(w.ui.frame_2); err != nil {
+	// newSysEnvBtn
+	if w.ui.newSysEnvBtn, err = walk.NewPushButton(w.ui.frame_2); err != nil {
 		return err
 	}
-	w.ui.pushButton_6.SetName("pushButton_6")
-	if err := w.ui.pushButton_6.SetText(`New`); err != nil {
-		return err
-	}
-
-	// pushButton_3
-	if w.ui.pushButton_3, err = walk.NewPushButton(w.ui.frame_2); err != nil {
-		return err
-	}
-	w.ui.pushButton_3.SetName("pushButton_3")
-	if err := w.ui.pushButton_3.SetText(`Delete`); err != nil {
+	w.ui.newSysEnvBtn.SetName("newSysEnvBtn")
+	if err := w.ui.newSysEnvBtn.SetText(`New`); err != nil {
 		return err
 	}
 
-	// pushButton_4
-	if w.ui.pushButton_4, err = walk.NewPushButton(w.ui.frame_2); err != nil {
+	// delSysEnvBtn
+	if w.ui.delSysEnvBtn, err = walk.NewPushButton(w.ui.frame_2); err != nil {
 		return err
 	}
-	w.ui.pushButton_4.SetName("pushButton_4")
-	if err := w.ui.pushButton_4.SetText(`Edit`); err != nil {
+	w.ui.delSysEnvBtn.SetName("delSysEnvBtn")
+	if err := w.ui.delSysEnvBtn.SetText(`Delete`); err != nil {
+		return err
+	}
+
+	// editSysEnvBtn
+	if w.ui.editSysEnvBtn, err = walk.NewPushButton(w.ui.frame_2); err != nil {
+		return err
+	}
+	w.ui.editSysEnvBtn.SetName("editSysEnvBtn")
+	if err := w.ui.editSysEnvBtn.SetText(`Edit`); err != nil {
 		return err
 	}
 
@@ -229,21 +229,21 @@ func (w *EnvSettingDialog) init(owner walk.RootWidget) (err error) {
 		return err
 	}
 
-	// pushButton_8
-	if w.ui.pushButton_8, err = walk.NewPushButton(w.ui.frame_3); err != nil {
+	// okBtn
+	if w.ui.okBtn, err = walk.NewPushButton(w.ui.frame_3); err != nil {
 		return err
 	}
-	w.ui.pushButton_8.SetName("pushButton_8")
-	if err := w.ui.pushButton_8.SetText(`OK`); err != nil {
+	w.ui.okBtn.SetName("okBtn")
+	if err := w.ui.okBtn.SetText(`OK`); err != nil {
 		return err
 	}
 
-	// pushButton_7
-	if w.ui.pushButton_7, err = walk.NewPushButton(w.ui.frame_3); err != nil {
+	// cancelBtn
+	if w.ui.cancelBtn, err = walk.NewPushButton(w.ui.frame_3); err != nil {
 		return err
 	}
-	w.ui.pushButton_7.SetName("pushButton_7")
-	if err := w.ui.pushButton_7.SetText(`Cancel`); err != nil {
+	w.ui.cancelBtn.SetName("cancelBtn")
+	if err := w.ui.cancelBtn.SetText(`Cancel`); err != nil {
 		return err
 	}
 
