@@ -127,87 +127,16 @@ func (m *EnvModel) ResetRows() {
 	m.rowsResetPublisher.Publish()
 }
 
+type EnvSettingDialog struct{
+	*walk.Dialog
+	ui dialogUI
+}
 
-func main() {
+func main(){
 
-	model := &EnvModel{}
-	model.Init(0)
-
-
-	model2 := &EnvModel{}
-	model2.Init(1)
-
-	walk.Initialize(walk.InitParams{PanicOnError: true})
-	defer walk.Shutdown()
-
-	myWindow, _ := walk.NewMainWindow()
-
-	mwVbox := walk.NewVBoxLayout()
-	mwVbox.SetMargins(walk.Margins{5, 5, 5, 5})
-	myWindow.SetLayout(mwVbox)
-
-	//user group
-	myWindow.SetTitle("环境变量")
-	grp1, _ := walk.NewGroupBox(myWindow)
-	grp1.SetTitle("bzhu的用户变量")
-
-	grp1Vbox := walk.NewVBoxLayout()
-	grp1Vbox.SetMargins(walk.Margins{10, 10, 10, 20})
-	grp1.SetLayout(grp1Vbox)
-	tableView, _ := walk.NewTableView(grp1)
-	tableView.SetModel(model)
-
-	buttonWidgetsGrp1, _ :=  walk.NewComposite(grp1)
-	btnWidgetsHboxGrp1 := walk.NewHBoxLayout()
-	buttonWidgetsGrp1.SetLayout(btnWidgetsHboxGrp1)
-	btnWidgetsHboxGrp1.SetSpacing(15)
-	_, _ = walk.NewHSpacer(buttonWidgetsGrp1)
-	newUsrEnvBtn, _ := walk.NewPushButton(buttonWidgetsGrp1)
-	newUsrEnvBtn.SetText("新建")
-	newEditUsrEnvBtn, _ := walk.NewPushButton(buttonWidgetsGrp1)
-	newEditUsrEnvBtn.SetText("编辑")
-	deleteEditUsrEnvBtn, _ := walk.NewPushButton(buttonWidgetsGrp1)
-	deleteEditUsrEnvBtn.SetText("编辑")
-
-
-
-	//sys group
-	grp2, _ := walk.NewGroupBox(myWindow)
-	grp2.SetTitle("系统变量")
-	grp2Vbox := walk.NewVBoxLayout()
-	grp2Vbox.SetMargins(walk.Margins{10, 10, 10, 20})
-	grp2.SetLayout(grp2Vbox)
-    tableView2, _ := walk.NewTableView(grp2)
-	tableView2.SetModel(model2)	
-
-	buttonWidgets, _ :=  walk.NewComposite(myWindow)
-	btnWidgetsHbox := walk.NewHBoxLayout()
-	btnWidgetsHbox.SetMargins(walk.Margins{0, 5, 0, 5})
-
-	buttonWidgetsGrp2, _ :=  walk.NewComposite(grp2)	
-	btnWidgetsHboxGrp2 := walk.NewHBoxLayout()
-	buttonWidgetsGrp2.SetLayout(btnWidgetsHboxGrp2)
-	btnWidgetsHboxGrp2.SetSpacing(15)
-	_, _ = walk.NewHSpacer(buttonWidgetsGrp2)
-	newSysEnvBtn, _ := walk.NewPushButton(buttonWidgetsGrp2)
-	newSysEnvBtn.SetText("新建")
-	newEditSysEnvBtn, _ := walk.NewPushButton(buttonWidgetsGrp2)
-	newEditSysEnvBtn.SetText("编辑")
-	deleteEditSysEnvBtn, _ := walk.NewPushButton(buttonWidgetsGrp2)
-	deleteEditSysEnvBtn.SetText("编辑")
-
-	//bottom button
-	buttonWidgets.SetLayout(btnWidgetsHbox)
-	btnWidgetsHbox.SetSpacing(15)
-	_, _ = walk.NewHSpacer(buttonWidgets)
-	okBtn, _ := walk.NewPushButton(buttonWidgets)
-	okBtn.SetText("确定")
-	cancelBtn, _ := walk.NewPushButton(buttonWidgets)
-	cancelBtn.SetText("取消")
-	
-
-	myWindow.Show()
-	myWindow.SetMinMaxSize(walk.Size{320, 240}, walk.Size{})
-	myWindow.SetSize(walk.Size{400, 500})
-	myWindow.Run()
+	dlg := new(EnvSettingDialog)
+	if err := dlg.init(nil); err != nil {
+		panic("cna't init the dialogUI")
+	}
+	dlg.Run()
 }
