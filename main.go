@@ -138,5 +138,16 @@ func main(){
 	if err := dlg.init(nil); err != nil {
 		panic("cna't init the dialogUI")
 	}
+	dlg.ui.usrEnvTableView.SetLastColumnStretched(true)
+	dlg.ui.sysEnvTableView.SetLastColumnStretched(true)
+
+	usrEnv := &EnvModel{}
+	usrEnv.Init(0)
+	sysEnv := &EnvModel{}
+	sysEnv.Init(1)
+
+	dlg.ui.usrEnvTableView.SetModel(usrEnv)
+	dlg.ui.sysEnvTableView.SetModel(sysEnv)
+
 	dlg.Run()
 }
