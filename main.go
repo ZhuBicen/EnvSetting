@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/ZhuBicen/walk"
 	. "github.com/ZhuBicen/walk/declarative"
+	"log"
 	"math/rand"
 	"strings"
 )
@@ -80,6 +81,7 @@ func (m *EnvModel) ResetRows() {
 }
 func main() {
 	model := NewEnvModel()
+	var usrTableView, sysTableView *walk.TableView
 	MainWindow{
 		Title:  "Enviroment Variable",
 		Size:   Size{600, 700},
@@ -90,6 +92,7 @@ func main() {
 				Layout: VBox{},
 				Children: []Widget{
 					TableView{
+						AssignTo:              &usrTableView,
 						AlternatingRowBGColor: walk.RGB(255, 255, 224),
 						ColumnsOrderable:      true,
 						Columns: []TableViewColumn{
@@ -98,6 +101,9 @@ func main() {
 						},
 						LastColumnStretched: true,
 						Model:               model,
+						OnItemActivated: func() {
+							log.Println("OnItemActivated....", usrTableView.CurrentIndex())
+						},
 					},
 					Composite{
 						Layout: HBox{},
@@ -121,6 +127,7 @@ func main() {
 				Layout: VBox{},
 				Children: []Widget{
 					TableView{
+						AssignTo:              &sysTableView,
 						AlternatingRowBGColor: walk.RGB(255, 255, 224),
 						ColumnsOrderable:      true,
 						Columns: []TableViewColumn{
