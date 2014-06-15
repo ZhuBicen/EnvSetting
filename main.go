@@ -154,6 +154,18 @@ func main() {
 					},
 				},
 			},
+			Composite{
+				Layout: HBox{},
+				Children: []Widget{
+					HSpacer{},
+					PushButton{
+						Text: "Apply",
+					},
+					PushButton{
+						Text: "Cancel",
+					},
+				},
+			},
 		},
 	}.Run()
 
