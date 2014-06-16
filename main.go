@@ -4,8 +4,6 @@ import (
 	"github.com/ZhuBicen/walk"
 	. "github.com/ZhuBicen/walk/declarative"
 	"log"
-	"math/rand"
-	"strings"
 )
 
 type Variable struct {
@@ -15,15 +13,18 @@ type Variable struct {
 }
 
 type EnvModel struct {
+	envType EnvType
 	walk.TableModelBase
 	items []*Variable
 }
 
-func NewEnvModel() *EnvModel {
+func NewEnvModel(env EnvType) *EnvModel {
 	m := new(EnvModel)
+	m.envType = env
 
 	m.ResetRows()
 	return m
+
 }
 
 // Called by the TableView from SetModel and every time the model publishes a
@@ -38,12 +39,9 @@ func (m *EnvModel) Value(row, col int) interface{} {
 
 	switch col {
 	case 0:
-		return item.Index
-
-	case 1:
 		return item.Name
 
-	case 2:
+	case 1:
 		return item.Value
 	}
 
@@ -65,22 +63,20 @@ func (m *EnvModel) Image(row int) interface{} {
 }
 
 func (m *EnvModel) ResetRows() {
-	// Create some random data.
-	m.items = make([]*Variable, rand.Intn(50000))
-
-	for i := range m.items {
-		m.items[i] = &Variable{
-			Index: i,
-			Name:  strings.Repeat("*", rand.Intn(5)+1),
-			Value: strings.Repeat("*", rand.Intn(5)+1),
+	if usrEnv, err := ReadVariables(m.envType); err != nil {
+		panic("Fail to read the user env")
+	} else {
+		m.items = make([]*Variable, 0)
+		for k, v := range usrEnv {
+			m.items = append(m.items, &Variable{0, k, v})
 		}
 	}
-
 	// Notify TableView and other interested parties about the reset.
 	m.PublishRowsReset()
 }
 func main() {
-	model := NewEnvModel()
+	usrModel := NewEnvModel(0)
+	sysModel := NewEnvModel(1)
 	var usrTableView, sysTableView *walk.TableView
 	MainWindow{
 		Title:  "Enviroment Variable",
@@ -100,7 +96,7 @@ func main() {
 							{Title: "Value"},
 						},
 						LastColumnStretched: true,
-						Model:               model,
+						Model:               usrModel,
 						OnItemActivated: func() {
 							log.Println("OnItemActivated....", usrTableView.CurrentIndex())
 						},
@@ -135,7 +131,7 @@ func main() {
 							{Title: "Value"},
 						},
 						LastColumnStretched: true,
-						Model:               model,
+						Model:               sysModel,
 					},
 					Composite{
 						Layout: HBox{},
