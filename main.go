@@ -85,6 +85,11 @@ func (m *EnvModel) ResetRows() {
 	m.PublishRowsReset()
 }
 func main() {
+	font := Font{
+		Family:    "Times New Roman",
+		PointSize: 13,
+		Bold:      true,
+	}
 	usr, _ := user.Current()
 	usrModel := NewEnvModel(0)
 	sysModel := NewEnvModel(1)
@@ -95,11 +100,13 @@ func main() {
 		Size:     Size{600, 700},
 		Layout:   VBox{},
 		AssignTo: &mw,
+		Font:     font,
 		Children: []Widget{
 			VSplitter{
 				Children: []Widget{
 					GroupBox{
 						Title:  "User variables for " + usr.Username,
+						Font:   font,
 						Layout: VBox{},
 						Children: []Widget{
 							TableView{
@@ -107,7 +114,7 @@ func main() {
 								AlternatingRowBGColor: walk.RGB(255, 255, 224),
 								ColumnsOrderable:      true,
 								Columns: []TableViewColumn{
-									{Title: "Variable"},
+									{Title: "Variable", Width: 200},
 									{Title: "Value"},
 								},
 								LastColumnStretched: true,
@@ -136,6 +143,7 @@ func main() {
 					},
 					GroupBox{
 						Title:  "System variables",
+						Font:   font,
 						Layout: VBox{},
 						Children: []Widget{
 							TableView{
@@ -143,7 +151,7 @@ func main() {
 								AlternatingRowBGColor: walk.RGB(255, 255, 224),
 								ColumnsOrderable:      true,
 								Columns: []TableViewColumn{
-									{Title: "Variable"},
+									{Title: "Variable", Width: 200},
 									{Title: "Value"},
 								},
 								LastColumnStretched: true,
@@ -182,6 +190,7 @@ func main() {
 					PushButton{
 						Text: "Cancel",
 					},
+					HSpacer{},
 				},
 			},
 		},
