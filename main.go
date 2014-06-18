@@ -89,10 +89,12 @@ func main() {
 	usrModel := NewEnvModel(0)
 	sysModel := NewEnvModel(1)
 	var usrTableView, sysTableView *walk.TableView
+	var mw *walk.MainWindow
 	MainWindow{
-		Title:  "Enviroment Variable",
-		Size:   Size{600, 700},
-		Layout: VBox{},
+		Title:    "Enviroment Variable",
+		Size:     Size{600, 700},
+		Layout:   VBox{},
+		AssignTo: &mw,
 		Children: []Widget{
 			VSplitter{
 				Children: []Widget{
@@ -111,7 +113,8 @@ func main() {
 								LastColumnStretched: true,
 								Model:               usrModel,
 								OnItemActivated: func() {
-									log.Println("OnItemActivated....", usrTableView.CurrentIndex())
+									index := usrTableView.CurrentIndex()
+									ShowDialog(mw, usrModel.items[index].Name, usrModel.items[index].Value)
 								},
 							},
 							Composite{
@@ -145,6 +148,10 @@ func main() {
 								},
 								LastColumnStretched: true,
 								Model:               sysModel,
+								OnItemActivated: func() {
+									index := sysTableView.CurrentIndex()
+									ShowDialog(mw, sysModel.items[index].Name, sysModel.items[index].Value)
+								},
 							},
 							Composite{
 								Layout: HBox{},
