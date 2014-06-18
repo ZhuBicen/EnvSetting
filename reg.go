@@ -3,10 +3,11 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
 	"syscall"
 	"unsafe"
 )
-import . "github.com/ZhuBicen/go-winapi"
+import . "github.com/lxn/go-winapi"
 
 type EnvType int
 
@@ -108,13 +109,15 @@ func ReadVariables(etype EnvType) (map[string]string, error) {
 			break
 		}
 
-		dataBuffer := make([]uint16, dataLen/2+1)
+		dataBuffer := make([]uint16, dataLen/2+2)
 
 		if ERROR_SUCCESS != RegQueryValueEx(hkey, &valueBuffer[0], nil, &dataType, (*byte)(unsafe.Pointer(&dataBuffer[0])), &dataLen) {
 			return nil, errors.New("ERROR2")
 		}
 		envMap[syscall.UTF16ToString(valueBuffer)] = syscall.UTF16ToString(dataBuffer)
-
+		if syscall.UTF16ToString(valueBuffer) == "Path" {
+			log.Println("Path = ", syscall.UTF16ToString(dataBuffer))
+		}
 	}
 	return envMap, nil
 }
