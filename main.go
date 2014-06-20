@@ -115,8 +115,8 @@ func main() {
 								AlternatingRowBGColor: walk.RGB(255, 255, 224),
 								ColumnsOrderable:      true,
 								Columns: []TableViewColumn{
-									{Title: "Variable", Width: 200},
-									{Title: "Value"},
+									{Title: "name", Width: 200},
+									{Title: "value"},
 								},
 								LastColumnStretched: true,
 								Model:               usrModel,

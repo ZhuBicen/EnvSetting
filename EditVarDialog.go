@@ -27,7 +27,7 @@ func ShowDialog(parent walk.Form, name string, value string) (int, error) {
 				Layout: HBox{},
 				Children: []Widget{
 					Label{
-						Text: "Name:",
+						Text: "Variable name:",
 					},
 					LineEdit{
 						Text: name,
@@ -38,7 +38,7 @@ func ShowDialog(parent walk.Form, name string, value string) (int, error) {
 				Layout: HBox{},
 				Children: []Widget{
 					Label{
-						Text: "Value:",
+						Text: "Variable value:",
 					},
 					TextEdit{
 						Text: value,
