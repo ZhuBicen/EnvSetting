@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 	"syscall"
 	"unsafe"
 )
@@ -16,7 +17,6 @@ const (
 	SYS_SUBKEY = `SYSTEM\CurrentControlSet\Control\Session Manager\Environment`
 )
 
-/*
 func CreateVariable(etype EnvType, varName string, varValue string) error {
 	var rootkey HKEY
 	var subkey string
@@ -39,16 +39,18 @@ func CreateVariable(etype EnvType, varName string, varValue string) error {
 	if strings.Index(varValue, "%") != -1 {
 		dataType = REG_EXPAND_SZ
 	}
+
 	if ret := RegSetValueEx(mykey,
 		syscall.StringToUTF16Ptr(varName),
 		0,
-		dataType,
+		uint64(dataType),
 		(*byte)(unsafe.Pointer(syscall.StringToUTF16Ptr(varValue))),
-		uint32(len(syscall.StringToUTF16(varValue)))); ret != ERROR_SUCCESS {
+		// In Bytes.
+		uint32(len(syscall.StringToUTF16(varValue))*2)); ret != ERROR_SUCCESS {
 		return errors.New(fmt.Sprintf("CreateEnvVar error, RegSetValueEx = %d", ret))
 	}
 	return nil
-}*/
+}
 
 func ReadVariable(etype EnvType, varName string) (string, error) {
 	var rootkey HKEY
@@ -71,12 +73,13 @@ func ReadVariable(etype EnvType, varName string) (string, error) {
 	var dataLen uint32 = 0
 	var dataType uint32 = 0
 
+	// Data Length in bytes?
 	if ret := RegQueryValueEx(mykey, syscall.StringToUTF16Ptr(varName),
 		nil, &dataType, nil, &dataLen); ret != ERROR_SUCCESS {
 		return "", errors.New(fmt.Sprintf("ReadVariable error1, RegQueryValueEx = %d", ret))
 	}
 
-	dataBuffer := make([]uint16, dataLen/2+1)
+	dataBuffer := make([]uint16, dataLen)
 
 	if ret := RegQueryValueEx(mykey, syscall.StringToUTF16Ptr(varName),
 		nil, &dataType, (*byte)(unsafe.Pointer(&dataBuffer[0])), &dataLen); ret != ERROR_SUCCESS {
