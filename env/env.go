@@ -1,21 +1,32 @@
-package main
+package env
 
+// #include "reg.h"
+import "C"
 import (
 	"errors"
 	"fmt"
+	. "github.com/lxn/go-winapi"
 	"log"
 	"strings"
 	"syscall"
 	"unsafe"
 )
-import . "github.com/lxn/go-winapi"
 
 type EnvType int
 
+// http://www.codeguru.com/cpp/w-p/win32/tutorials/article.php/c10849/Setting-a-System-Environment-Variable.htm
 const (
 	USR_SUBKEY = "Environment"
 	SYS_SUBKEY = `SYSTEM\CurrentControlSet\Control\Session Manager\Environment`
 )
+
+func DeleteVariable(varName string) error {
+	ret := int32(C.deleteVariable(unsafe.Pointer(syscall.StringToUTF16Ptr(varName))))
+	if ret == 0 {
+		return nil
+	}
+	return errors.New(fmt.Sprintf("Can't delete variable: %d", ret))
+}
 
 func CreateVariable(etype EnvType, varName string, varValue string) error {
 	var rootkey HKEY

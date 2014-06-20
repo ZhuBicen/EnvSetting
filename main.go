@@ -1,6 +1,7 @@
 package main
 
 import (
+	"./env"
 	"github.com/lxn/walk"
 	. "github.com/lxn/walk/declarative"
 	"log"
@@ -15,12 +16,12 @@ type Variable struct {
 }
 
 type EnvModel struct {
-	envType EnvType
+	envType env.EnvType
 	walk.TableModelBase
 	items []*Variable
 }
 
-func NewEnvModel(env EnvType) *EnvModel {
+func NewEnvModel(env env.EnvType) *EnvModel {
 	m := new(EnvModel)
 	m.envType = env
 
@@ -71,7 +72,7 @@ func (m *EnvModel) Swap(i, j int) {
 	m.items[i], m.items[j] = m.items[j], m.items[i]
 }
 func (m *EnvModel) ResetRows() {
-	if usrEnv, err := ReadVariables(m.envType); err != nil {
+	if usrEnv, err := env.ReadVariables(m.envType); err != nil {
 		panic("Fail to read the user env")
 	} else {
 		m.items = make([]*Variable, 0)

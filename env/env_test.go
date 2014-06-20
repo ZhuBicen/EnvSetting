@@ -1,4 +1,4 @@
-package main
+package env
 
 import (
 	"testing"
@@ -15,5 +15,9 @@ func TestNewVar(t *testing.T) {
 		if value != "testdata" {
 			t.Fatal("value =", value, " should =  testdata")
 		}
+	}
+
+	if err := DeleteVariable("testname"); err != nil {
+		t.Fatal("Can't delete the var", err)
 	}
 }
