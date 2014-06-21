@@ -131,9 +131,18 @@ func main() {
 									HSpacer{},
 									PushButton{
 										Text: "New...",
+										OnClicked: func() {
+											if ret, name, value := ShowDialog(mw, "", ""); ret == 0 {
+												log.Println("You will creating var name = ", name, ", value = ", value)
+											}
+										},
 									},
 									PushButton{
 										Text: "Edit...",
+										OnClicked: func() {
+											index := usrTableView.CurrentIndex()
+											ShowDialog(mw, usrModel.items[index].Name, usrModel.items[index].Value)
+										},
 									},
 									PushButton{
 										Text: "Delete",
@@ -171,6 +180,10 @@ func main() {
 									},
 									PushButton{
 										Text: "Edit...",
+										OnClicked: func() {
+											index := usrTableView.CurrentIndex()
+											ShowDialog(mw, usrModel.items[index].Name, usrModel.items[index].Value)
+										},
 									},
 									PushButton{
 										Text: "Delete",
@@ -191,7 +204,6 @@ func main() {
 					PushButton{
 						Text: "Cancel",
 					},
-					HSpacer{},
 				},
 			},
 		},

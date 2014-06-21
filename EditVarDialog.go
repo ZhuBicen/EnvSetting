@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func ShowDialog(parent walk.Form, name string, value string) (int, error) {
+func ShowDialog(parent walk.Form, name string, value string) (int, string, string) {
 	minSize := Size{400, 300}
 	if name == "Path" {
 
@@ -14,8 +14,10 @@ func ShowDialog(parent walk.Form, name string, value string) (int, error) {
 	}
 	value = strings.Replace(value, ";", "\r\n", -1)
 	var okButton, cancelButton *walk.PushButton
+	var nameLineEdit *walk.LineEdit
+	var valueTextEdit *walk.TextEdit
 	var dialog *walk.Dialog
-	return Dialog{
+	ret, _ := Dialog{
 		Title:         "Edit Variable",
 		Layout:        VBox{},
 		MinSize:       minSize,
@@ -30,7 +32,8 @@ func ShowDialog(parent walk.Form, name string, value string) (int, error) {
 						Text: "Variable name:",
 					},
 					LineEdit{
-						Text: name,
+						Text:     name,
+						AssignTo: &nameLineEdit,
 					},
 				},
 			},
@@ -41,7 +44,8 @@ func ShowDialog(parent walk.Form, name string, value string) (int, error) {
 						Text: "Variable value:",
 					},
 					TextEdit{
-						Text: value,
+						Text:     value,
+						AssignTo: &valueTextEdit,
 					},
 				},
 			},
@@ -53,13 +57,17 @@ func ShowDialog(parent walk.Form, name string, value string) (int, error) {
 						Text:     "OK",
 						AssignTo: &okButton,
 						OnClicked: func() {
-							dialog.Close(1)
+							name = nameLineEdit.Text()
+							value = valueTextEdit.Text()
+							dialog.Close(0)
 						},
 					},
 					PushButton{
 						Text:     "Cancel",
 						AssignTo: &cancelButton,
 						OnClicked: func() {
+							name = ""
+							value = ""
 							dialog.Close(1)
 						},
 					},
@@ -67,4 +75,5 @@ func ShowDialog(parent walk.Form, name string, value string) (int, error) {
 			},
 		},
 	}.Run(parent)
+	return ret, name, value
 }
