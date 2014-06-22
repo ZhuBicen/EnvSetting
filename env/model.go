@@ -2,6 +2,7 @@ package env
 
 import (
 	"github.com/lxn/walk"
+	"log"
 	"sort"
 )
 
@@ -16,12 +17,14 @@ type Model struct {
 	envType EnvType
 	walk.TableModelBase
 	items []*Variable
+
+	deletedItems map[string]bool
 }
 
 func NewModel(env EnvType) *Model {
 	m := new(Model)
 	m.envType = env
-
+	m.deletedItems = make(map[string]bool)
 	m.ResetRows()
 	return m
 
@@ -69,7 +72,7 @@ func (m *Model) Swap(i, j int) {
 	m.items[i], m.items[j] = m.items[j], m.items[i]
 }
 func (m *Model) ResetRows() {
-	if usrEnv, err := ReadVariables(m.envType); err != nil {
+	if usrEnv, err := LoadVariables(m.envType); err != nil {
 		panic("Fail to read the user env")
 	} else {
 		m.items = make([]*Variable, 0)
@@ -108,6 +111,7 @@ func (m *Model) EditVariable(name string, value string) bool {
 func (m *Model) DeleteVariable(name string) bool {
 	for i, variable := range m.items {
 		if variable.Name == name {
+			m.deletedItems[name] = true
 			m.items = append(m.items[:i], m.items[i+1:]...)
 			sort.Sort(m)
 			// Notify TableView and other interested parties about the reset.
@@ -124,4 +128,31 @@ func (m *Model) exists(name string) (bool, *Variable) {
 		}
 	}
 	return false, nil
+}
+
+func (m *Model) Apply() error {
+	for _, variable := range m.items {
+		value, err := ReadVariable(m.envType, variable.Name)
+		if err != nil {
+			// this is a new variable
+			log.Println("New Variable:", variable.Name, "=>", variable.Value)
+			goto editOrNew
+		}
+		if variable.Value == value {
+			continue
+		}
+	editOrNew:
+		// user changed the variable
+		log.Println("Change Variable:", variable.Name, "=>", variable.Value)
+		if err := EditVariable(m.envType, variable.Name, variable.Value); err != nil {
+			return err
+		}
+	}
+	for name, _ := range m.deletedItems {
+		log.Println("Delete Variable:", name)
+		if err := DeleteVariable(m.envType, name); err != nil {
+			return err
+		}
+	}
+	return nil
 }

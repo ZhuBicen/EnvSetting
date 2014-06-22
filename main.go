@@ -2,6 +2,7 @@ package main
 
 import (
 	"./env"
+	"fmt"
 	"github.com/lxn/walk"
 	. "github.com/lxn/walk/declarative"
 	"github.com/lxn/win"
@@ -34,6 +35,18 @@ func DeleteVariable(mw *walk.MainWindow, m *env.Model, name string) {
 			walk.MsgBox(mw, "Error", "Please ensure the variable has already existed.", walk.MsgBoxOK)
 		}
 	}
+}
+
+func ApplyEnv(mw *walk.MainWindow, usrModel *env.Model, sysModel *env.Model) bool {
+	if err := usrModel.Apply(); err != nil {
+		walk.MsgBox(mw, "Error", fmt.Sprintf("%s", err), walk.MsgBoxOK)
+		return false
+	}
+	if err := sysModel.Apply(); err != nil {
+		walk.MsgBox(mw, "Error", fmt.Sprintf("%s", err), walk.MsgBoxOK)
+		return false
+	}
+	return true
 }
 func main() {
 	font := Font{
@@ -171,9 +184,17 @@ func main() {
 					HSpacer{},
 					PushButton{
 						Text: "OK",
+						OnClicked: func() {
+							if ApplyEnv(mw, usrModel, sysModel) {
+								mw.Close()
+							}
+						},
 					},
 					PushButton{
 						Text: "Cancel",
+						OnClicked: func() {
+							mw.Close()
+						},
 					},
 				},
 			},

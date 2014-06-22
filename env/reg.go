@@ -18,15 +18,16 @@ const (
 	SYS_SUBKEY = `SYSTEM\CurrentControlSet\Control\Session Manager\Environment`
 )
 
-func DeleteVariable(varName string) error {
-	ret := int32(C.deleteVariable(unsafe.Pointer(syscall.StringToUTF16Ptr(varName))))
+func DeleteVariable(etype EnvType, varName string) error {
+	ret := int32(C.deleteVariable(C.int(etype), unsafe.Pointer(syscall.StringToUTF16Ptr(varName))))
 	if ret == 0 {
 		return nil
 	}
 	return errors.New(fmt.Sprintf("Can't delete variable: %d", ret))
 }
 
-func CreateVariable(etype EnvType, varName string, varValue string) error {
+// if not existing, creating new one.
+func EditVariable(etype EnvType, varName string, varValue string) error {
 	var rootkey HKEY
 	var subkey string
 
@@ -41,7 +42,7 @@ func CreateVariable(etype EnvType, varName string, varValue string) error {
 	var mykey HKEY
 
 	if ret := RegOpenKeyEx(rootkey, syscall.StringToUTF16Ptr(subkey), 0, KEY_WRITE, &mykey); ret != ERROR_SUCCESS {
-		return errors.New(fmt.Sprintf("CreateEnvVar error, RegOpenKeyEx = %d", ret))
+		return errors.New(fmt.Sprintf("EditVariable error, RegOpenKeyEx = %d", ret))
 	}
 
 	dataType := REG_SZ
@@ -56,7 +57,7 @@ func CreateVariable(etype EnvType, varName string, varValue string) error {
 		(*byte)(unsafe.Pointer(syscall.StringToUTF16Ptr(varValue))),
 		// In Bytes.
 		uint32(len(syscall.StringToUTF16(varValue))*2)); ret != ERROR_SUCCESS {
-		return errors.New(fmt.Sprintf("CreateEnvVar error, RegSetValueEx = %d", ret))
+		return errors.New(fmt.Sprintf("EditVariable error, RegSetValueEx = %d", ret))
 	}
 	return nil
 }
@@ -98,7 +99,7 @@ func ReadVariable(etype EnvType, varName string) (string, error) {
 
 }
 
-func ReadVariables(etype EnvType) (map[string]string, error) {
+func LoadVariables(etype EnvType) (map[string]string, error) {
 	var hkey HKEY
 	envMap := make(map[string]string)
 	if etype == 0 {

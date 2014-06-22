@@ -1,1 +1,1 @@
-extern int deleteVariable(void* varName);
+extern int deleteVariable(int envType, void* varName);

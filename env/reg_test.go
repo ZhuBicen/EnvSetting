@@ -5,7 +5,11 @@ import (
 )
 
 func TestNewVar(t *testing.T) {
-	if err := CreateVariable(0, "testname", "testdata"); err != nil {
+	DeleteVariable(0, "NotExisting")
+	if _, err := ReadVariable(0, "NotExisting"); err == nil {
+		t.Fatal("Can't read var NotExisting.")
+	}
+	if err := EditVariable(0, "testname", "testdata"); err != nil {
 		t.Fatal("can't create var", err)
 	}
 
@@ -17,7 +21,7 @@ func TestNewVar(t *testing.T) {
 		}
 	}
 
-	if err := DeleteVariable("testname"); err != nil {
+	if err := DeleteVariable(0, "testname"); err != nil {
 		t.Fatal("Can't delete the var", err)
 	}
 }

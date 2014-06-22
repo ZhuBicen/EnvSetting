@@ -2,14 +2,22 @@
 #include "reg.h"
 #include "_cgo_export.h"
 
-int deleteVariable(void* varName)
+int deleteVariable(int envType, void* varName)
 {
 	HKEY hkey1 = NULL;
 
-	if (ERROR_SUCCESS != RegOpenKeyEx( HKEY_CURRENT_USER, "Environment", 
-		0, KEY_ALL_ACCESS, &hkey1)) {
-			return -1;
+	if (envType == 0) {
+		if (ERROR_SUCCESS != RegOpenKeyEx( HKEY_CURRENT_USER, "Environment", 
+			0, KEY_ALL_ACCESS, &hkey1)) {
+				return -1;
+		}
+	} else {
+		if (ERROR_SUCCESS != RegOpenKeyEx( HKEY_LOCAL_MACHINE, "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment", 
+			0, KEY_ALL_ACCESS, &hkey1)) {
+				return -1;
+		}
 	}
+	
 	LONG result = RegDeleteValueW(hkey1, (wchar_t*)(varName));
 	if (ERROR_SUCCESS != result) {
 		return result;
