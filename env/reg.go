@@ -12,8 +12,6 @@ import (
 	"unsafe"
 )
 
-type EnvType int
-
 // http://www.codeguru.com/cpp/w-p/win32/tutorials/article.php/c10849/Setting-a-System-Environment-Variable.htm
 const (
 	USR_SUBKEY = "Environment"
