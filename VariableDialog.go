@@ -9,7 +9,6 @@ import (
 func ShowDialog(parent walk.Form, name string, value string) (int, string, string) {
 	minSize := Size{400, 300}
 	if name == "Path" {
-
 		minSize = Size{450, 600}
 	}
 	value = strings.Replace(value, ";", "\r\n", -1)
@@ -75,5 +74,5 @@ func ShowDialog(parent walk.Form, name string, value string) (int, string, strin
 			},
 		},
 	}.Run(parent)
-	return ret, name, value
+	return ret, name, strings.Replace(value, "\r\n", ";", -1)
 }
