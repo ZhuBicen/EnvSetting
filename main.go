@@ -5,13 +5,11 @@ import (
 	"github.com/lxn/walk"
 	. "github.com/lxn/walk/declarative"
 	"github.com/lxn/win"
-	"log"
 	"os/user"
 )
 
 func NewVariable(mw *walk.MainWindow, m *env.Model) {
 	if ret, name, value := ShowDialog(mw, "", ""); ret == 0 {
-		log.Println("You will creating var name = ", name, ", value = ", value)
 		if !m.AddVariable(name, value) {
 			walk.MsgBox(mw, "Error", "The variable has already existed.", walk.MsgBoxOK)
 		}
@@ -172,7 +170,7 @@ func main() {
 				Children: []Widget{
 					HSpacer{},
 					PushButton{
-						Text: "Apply",
+						Text: "OK",
 					},
 					PushButton{
 						Text: "Cancel",
